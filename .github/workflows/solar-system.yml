@@ -40,3 +40,29 @@ jobs:
           with:
             name: testfiles
             path: test-results.xml
+    
+    code-coverage:
+        name: coverage
+        runs-on: ubuntu-latest
+        steps:
+        - name: checkourt repsoitory
+          uses: actions/checkout@v4
+
+        - name: setup nodejs version
+          uses: setup/setup-node@v3
+          with:
+            node-version: 18
+        
+        - name: install dependencies
+          run: npm install
+
+        - name: check code coverage
+          run: npm run coverage
+
+        
+        - name: code-coverage
+          uses: actions/upload-artifact@v1
+          with:
+            name: codecoverage
+            path: coverage.xml
+    
