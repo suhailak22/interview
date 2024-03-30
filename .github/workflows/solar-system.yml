@@ -42,6 +42,7 @@ jobs:
             path: test-results.xml
     
     code-coverage:
+        needs: unit-testing
         name: coverage
         runs-on: ubuntu-latest
         steps:
