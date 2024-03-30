@@ -8,7 +8,7 @@ on:
       - 'feature/*'
 
 env:
-    MONGO_URI: 'mongodb+srv://suhailakofficial:4USYmVUZIOeztbpx@cluster0.e8s35ig.mongodb.net'
+    MONGO_URI: 'mongodb+srv://suhailakofficial:sUHA123Z@cluster0.e8s35ig.mongodb.net/test'
 
 jobs:
     unit-testing:
@@ -28,4 +28,3 @@ jobs:
     
         - name: Unit Testing
           run: npm test
-          
