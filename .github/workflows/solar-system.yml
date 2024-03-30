@@ -6,7 +6,10 @@ on:
     branches:
       - main
       - 'feature/*'
-    
+
+env:
+    MONGO_URI: 'mongodb+srv://suhailakofficial:4USYmVUZIOeztbpx@cluster0.e8s35ig.mongodb.net'
+
 jobs:
     unit-testing:
         name: Unit Testing
