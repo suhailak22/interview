@@ -83,7 +83,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
     
       - name: docker push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v4
         with:
           context: .
           push: false
@@ -101,7 +101,7 @@ jobs:
              ${{ vars.DOCKERHUB_USERNAME }}/intervie:$( github.sha )
 
       -  name: Docker push
-         uses: docker/build-push-action@v5
+         uses: docker/build-push-action@v4
          with: 
           context: .
           push: true
