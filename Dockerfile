@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-ENV MONGO_URI= uriPlaceholder
+ENV MONGO_URI= ${{ vars.MONGO_URI }}
 ENV MONGO_USERNAME= ${{ secrets.MONGO_USERNAME }}
 ENV MONGO_PASSWORD= ${{ secrets.MONGO_PASSWORD }}
 
