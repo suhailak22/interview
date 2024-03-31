@@ -115,11 +115,18 @@ jobs:
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
         
 
-      -  name: container registry  push
-         uses: docker/build-push-action@v4
-         with: 
-          context: .
-          push: true
-          tags: |
-            ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
-            ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
+      - name: Deploy to AWS EC2
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+            
+      - name: Install Docker on EC2 instance
+        run: |
+           ssh -i /var/www/html/githubactions.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo apt-get update && sudo apt-get install -y docker.io'
+            
+      - name: Run Docker commands on EC2 instance
+        run: |
+          ssh -i /var/www/html/githubactions.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }} && docker run -d -p 3000:3000 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}'
+            
