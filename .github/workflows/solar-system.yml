@@ -132,9 +132,9 @@ jobs:
             
        - name: Install Docker on EC2 instance
          run: |
-            ssh -i /var/www/html/githubactions.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo apt-get update && sudo apt-get install -y docker.io'
+           ssh -i "githubactions.pem" ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo apt-get update && sudo apt-get install -y docker.io'
             
        - name: Run Docker commands on EC2 instance
          run: |
-           ssh -i /var/www/html/githubactions.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }} && docker run -d -p 3000:3000 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}'
+           ssh -i "githubactions.pem" ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }} && docker run -d -p 3000:3000 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}'
             
