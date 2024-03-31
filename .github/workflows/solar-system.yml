@@ -86,6 +86,6 @@ jobs:
       - name: docker push
         uses: docker/build-push-action@v5
         with:
-          context:
+          context: .
           push: false
           tags: docker
