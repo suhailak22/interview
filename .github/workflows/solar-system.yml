@@ -18,7 +18,6 @@ jobs:
         strategy:
             matrix:
                 nodejs_version: [18,19,20]
-                operating_system: ubuntu-latest
         runs-on: ubuntu-latest
         steps:
         - name: Checkout Repository
