@@ -87,7 +87,7 @@ jobs:
         with:
           context: .
           push: false
-          tags: github
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/intervie:$( github.sha )
         
 
       -  name: docker image testing
@@ -98,14 +98,14 @@ jobs:
              -e MONGO_URI=$MONGO_URI \
              -e MONGO_USERNAME=$MONGO_USERNAME
              -e MONGO_PASSWORD=$MONGO_PASSWORD
-             github
+             ${{ vars.DOCKERHUB_USERNAME }}/intervie:$( github.sha )
 
       -  name: Docker push
          uses: docker/build-push-action@v5
          with: 
           context: .
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/intervie:$( githu.sha )
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/intervie:$( github.sha )
 
 
 
