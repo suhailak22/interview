@@ -82,12 +82,6 @@ jobs:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      -  name: Login to ghcr
-         uses: docker/login-action@v3
-         with:
-          registry: ghcr.io
-          username: ${{ github.repsoitory_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: checkourt repsoitory
         uses: actions/checkout@v4   
@@ -111,11 +105,9 @@ jobs:
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
         
 
-      -  name: container registry  push
+      -  name: Docker push
          uses: docker/build-push-action@v4
          with: 
           context: .
           push: true
-          tags: |
-            ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
-            ghcr.io/${{ github.repsoitory_owner }}/solar-system:${{ github.sha }}
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
