@@ -83,9 +83,9 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
     
       - name: docker build
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./Dockerfile
           push: false
           tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
         
@@ -101,8 +101,8 @@ jobs:
              ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
 
       -  name: Docker push
-         uses: docker/build-push-action@v5
+         uses: docker/build-push-action@v4
          with: 
-          context: .
+          context: ./Dockerfile
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:$( github.sha )
