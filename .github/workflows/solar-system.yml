@@ -33,7 +33,7 @@ jobs:
           uses: actions/cache@v3
           with:
             path: node_modules
-            key: ${{ runners.operating_system }}-node-modules-${{ hashFiles('package-lock.json')}}
+            key: ${{ runners.os }}-node-modules-${{ hashFiles('package-lock.json') }}
         - name: Install Dependencies
           run: npm install
     
