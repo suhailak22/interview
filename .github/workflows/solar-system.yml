@@ -86,7 +86,7 @@ jobs:
          uses: docker/login-action@v3
          with:
           registry: ghcr.io
-          username: ${{ github.repsoitory_owner }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: checkourt repsoitory
