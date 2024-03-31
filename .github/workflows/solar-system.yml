@@ -110,4 +110,4 @@ jobs:
          with: 
           context: ./Dockerfile
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:$( github.sha )
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
