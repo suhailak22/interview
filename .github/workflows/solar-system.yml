@@ -134,6 +134,9 @@ jobs:
 
        steps: 
 
+       - name: checkourt repsoitory
+         uses: actions/checkout@v4  
+
        - name: Deploy to EC2 instance
          uses: appleboy/ssh-action@master
          with:
@@ -143,9 +146,6 @@ jobs:
            script: |
                cd /var/www/html
                ls 
-               
-       - name: checkourt repsoitory
-         uses: actions/checkout@v4  
 
        - name: Install Docker on EC2 instance
          run: |
