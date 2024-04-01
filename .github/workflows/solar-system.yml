@@ -1,6 +1,6 @@
 name: Solar System Workflow
 
-on: 
+on:
   workflow_dispatch:
   push:
     branches:
@@ -8,92 +8,90 @@ on:
       - 'feature/*'
       
 env:
-        MONGO_URI: ${{ vars.MONGO_URI }}
-        MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
-        MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+  MONGO_URI: ${{ vars.MONGO_URI }}
+  MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
+  MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
 
 jobs:
-    unit-testing:
-        name: Unit Testing
-        strategy:
-            matrix:
-                nodejs_version: [18,19]
-        runs-on: ubuntu-latest
-        steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v4
+  unit-testing:
+    name: Unit Testing
+    strategy:
+      matrix:
+        nodejs_version: [18, 19]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-        - name: Setup NodeJS Version - ${{ matrix.nodejs_version}}
-          uses: actions/setup-node@v3
-          with:
-            node-version: ${{ matrix.nodejs_version}}
+      - name: Setup NodeJS Version - ${{ matrix.nodejs_version}}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.nodejs_version}}
 
-        - name: cache dependencies
-          uses: actions/cache@v3
-          with:
-            path: node_modules
-            key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+      - name: cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
           
-        - name: Install Dependencies
-          run: npm install
+      - name: Install Dependencies
+        run: npm install
     
-        - name: Unit Testing
-          run: npm test
+      - name: Unit Testing
+        run: npm test
 
-        - name: test result
-          uses: actions/upload-artifact@v1
-          with:
-            name: testfiles
-            path: test-results.xml
+      - name: test result
+        uses: actions/upload-artifact@v1
+        with:
+          name: testfiles
+          path: test-results.xml
     
-    code-coverage:
-        name: coverage
-        runs-on: ubuntu-latest
-        steps:
-        - name: checkourt repsoitory
-          uses: actions/checkout@v4
+  code-coverage:
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkourt repository
+        uses: actions/checkout@v4
 
-        - name: setup nodejs version
-          uses: actions/setup-node@v3
-          with:
-            node-version: ${{ matrix.nodejs_version}}
+      - name: setup nodejs version
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.nodejs_version}}
         
-        - name: install dependencies
-          run: npm install
+      - name: install dependencies
+        run: npm install
 
-        - name: check code coverage
-          continue-on-error: true
-          run: npm run coverage
+      - name: check code coverage
+        continue-on-error: true
+        run: npm run coverage
 
-        - name: code-coverage
-          uses: actions/upload-artifact@v1
-          with:
-            name: codecoverage
-            path: coverage
+      - name: code-coverage
+        uses: actions/upload-artifact@v1
+        with:
+          name: codecoverage
+          path: coverage
 
-    Docker-login:
-      name: containerization
-      needs: [unit-testing, code-coverage]
-
-      permissions:
-        packages: write
-
-      runs-on: ubuntu-latest
-      steps:
-      -  name: Login to Docker Hub
-         uses: docker/login-action@v3
-         with:
+  Docker-login:
+    name: containerization
+    needs: [unit-testing, code-coverage]
+    permissions:
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      -  name: Login to ghcr
-         uses: docker/login-action@v3
-         with:
+      - name: Login to ghcr
+        uses: docker/login-action@v3
+        with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: checkourt repsoitory
+      - name: checkourt repository
         uses: actions/checkout@v4   
 
       - name: docker build
@@ -103,52 +101,46 @@ jobs:
           push: false
           tags: ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
         
-
       - name: docker image testing
         run: |
-            docker images
-            docker run --name solar-system -d \
-              -p 3000:3000 \
-              -e MONGO_URI=$MONGO_URI \
-              -e MONGO_USERNAME=$MONGO_USERNAME \
-              -e MONGO_PASSWORD=$MONGO_PASSWORD \
-              ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+          docker images
+          docker run --name solar-system -d \
+            -p 3000:3000 \
+            -e MONGO_URI=$MONGO_URI \
+            -e MONGO_USERNAME=$MONGO_USERNAME \
+            -e MONGO_PASSWORD=$MONGO_PASSWORD \
+            ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
 
-      -  name: container registry  push
-         uses: docker/build-push-action@v4
-         with: 
+      - name: container registry push
+        uses: docker/build-push-action@v4
+        with: 
           context: .
           push: true
           tags: |
-                 ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
-                 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
-     
+            ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
 
-    deploy-to-ec2-instance:
-       name: deployment
-       needs: [unit-testing, code-coverage, Docker-login]
-       runs-on: ubuntu-latest
-
-       permissions:
-        packages: write
-
-       steps: 
-
-       - name: checkourt repsoitory
-         uses: actions/checkout@v4  
-
-       - name: Deploy to EC2 instance
-         uses: appleboy/ssh-action@master
-         with:
-           host: ${{ secrets.EC2_HOST }}
-           username: ${{ secrets.EC2_USERNAME }}
-           key: ${{ secrets.EC2_PRIVATE_KEY }}
-           script: |
-               cd /var/www/html
-               ls 
-               chmod +x dockers.sh
-               ./dockers.sh
-               echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-               docker pull ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
-               docker run -d -p 3000:3000 ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
-               docker ps                 
+deploy-to-ec2-instance:
+  name: deployment
+  needs: [unit-testing, code-coverage, Docker-login]
+  runs-on: ubuntu-latest
+  permissions:
+    packages: write
+  steps: 
+    - name: checkourt repository
+      uses: actions/checkout@v4  
+    - name: Deploy to EC2 instance
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_PRIVATE_KEY }}
+        script: |
+          cd /var/www/html
+          ls 
+          chmod +x dockers.sh
+          ./dockers.sh
+          echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+          sudo docker pull ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
+          sudo docker run -d -p 3000:3000 ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
+          sudo docker ps
