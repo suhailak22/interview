@@ -133,8 +133,8 @@ jobs:
 
        - name: Install Docker on EC2 instance
          run: |
-           chmod +x docker.sh
-           ./docker.sh
+           chmod +x dockers.sh
+           ./dockers.sh
 
 
        - name: Pull and Run Docker Image
