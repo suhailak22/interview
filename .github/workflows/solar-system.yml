@@ -144,16 +144,22 @@ jobs:
             key: ${{ secrets.EC2_PRIVATE_KEY }}
             script: |
               # Commands to execute on the EC2 instance
+              cd /var/www/html
               pwd  # Example command
-              
-              # Install Docker
-              chmod +x dockers.sh
-              ./dockers.sh
+            
+        - name: Install Docker
+          run: |   
+           chmod +x dockers.sh
+           ./dockers.sh
+
+           pwd
+
+           ls
       
-              # Authenticate Docker with GHCR
-              echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+            # Authenticate Docker with GHCR
+            echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
                
-              # Pull and Run Docker Image
-              docker pull ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
-              docker run -d -p 3000:3000 ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
+            # Pull and Run Docker Image
+            docker pull ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
+            docker run -d -p 3000:3000 ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
       
