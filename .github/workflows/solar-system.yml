@@ -114,6 +114,16 @@ jobs:
               -e MONGO_PASSWORD=$MONGO_PASSWORD \
               ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
 
+      -  name: container registry  push
+         uses: docker/build-push-action@v4
+         with: 
+          context: .
+          push: true
+          tags: |
+                 ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+                 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
+     
+
     deploy-to-ec2-instance:
        name: deployment
        needs: [unit-testing, code-coverage, Docker-login]
@@ -140,4 +150,4 @@ jobs:
        - name: Pull and Run Docker Image
          run: |
           docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
-          docker run -d -p 3000:3000 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
+          docker run -d -p 3000:3000 ghcr.ioghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
