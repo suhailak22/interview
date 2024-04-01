@@ -141,7 +141,9 @@ jobs:
            username: ${{ secrets.EC2_USERNAME }}
            key: ${{ secrets.EC2_PRIVATE_KEY }}
            script: |
-            
+               cd /var/www/html
+               ls 
+               
        - name: checkourt repsoitory
          uses: actions/checkout@v4  
 
