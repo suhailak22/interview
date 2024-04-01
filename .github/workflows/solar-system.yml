@@ -147,9 +147,9 @@ jobs:
               cd /var/www/html
               pwd  # Example command
               # Authenticate Docker with GHCR
-              echo "${{ secrets.PAT }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+              echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
                
               # Pull and Run Docker Image
-              sudo docker pull ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
-              sudo docker run -d -p 3000:3000 ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
+              docker pull mohammedsuhail22/solar-system
+              sudo docker run -d -p 3000:3000 mohammedsuhail22/solar-system
       
