@@ -133,28 +133,27 @@ jobs:
        runs-on: ubuntu-latest
        steps: 
 
-       - name: Deploy to EC2 instance
-         uses: appleboy/ssh-action@master
-         with:
-           host: ${{ secrets.EC2_HOST }}
-           username: ${{ secrets.EC2_USERNAME }}
-           key: ${{ secrets.EC2_PRIVATE_KEY }}
-           script: |
-            
-       - name: checkourt repsoitory
-         uses: actions/checkout@v4  
+        - name: checkourt repsoitory
+          uses: actions/checkout@v4
 
-       - name: Install Docker on EC2 instance
-         run: |
-           chmod +x dockers.sh
-           ./dockers.sh
-    
-
-       - name: Authenticate Docker with GHCR
-         run: echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-         
-       - name: Pull and Run Docker Image
-         run: |
-          pwd
-          docker pull ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
-          docker run -d -p 3000:3000 ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
+        - name: Deploy to EC2 instance
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.EC2_HOST }}
+            username: ${{ secrets.EC2_USERNAME }}
+            key: ${{ secrets.EC2_PRIVATE_KEY }}
+            script: |
+              # Commands to execute on the EC2 instance
+              pwd  # Example command
+              
+              # Install Docker
+              chmod +x dockers.sh
+              ./dockers.sh
+      
+              # Authenticate Docker with GHCR
+              echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+               
+              # Pull and Run Docker Image
+              docker pull ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
+              docker run -d -p 3000:3000 ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
+      
