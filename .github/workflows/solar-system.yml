@@ -127,11 +127,11 @@ jobs:
     deploy-to-ec2-instance:
        name: deployment
        needs: [unit-testing, code-coverage, Docker-login]
+       runs-on: self-hosted
 
        permissions:
         packages: write
 
-       runs-on: ubuntu-latest
        steps: 
 
        - name: Deploy to EC2 instance
