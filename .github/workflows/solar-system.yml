@@ -118,10 +118,7 @@ jobs:
        name: deployment
        needs: [unit-testing, code-coverage, Docker-login]
        runs-on: ubuntu-latest
-       steps:
-
-       - name: checkourt repsoitory
-         uses: actions/checkout@v4   
+       steps: 
 
        - name: Deploy to EC2 instance
          uses: appleboy/ssh-action@master
@@ -131,10 +128,11 @@ jobs:
            key: ${{ secrets.EC2_PRIVATE_KEY }}
            script: |
             
+       - name: checkourt repsoitory
+         uses: actions/checkout@v4  
+
        - name: Install Docker on EC2 instance
          run: |
-           sudo apt-get update
-           ls
            chmod +x docker.sh
            ./docker.sh
 
