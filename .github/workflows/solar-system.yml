@@ -134,6 +134,7 @@ jobs:
        - name: Install Docker on EC2 instance
          run: |
            sudo apt-get update
+           ls
            chmod +x docker.sh
            ./docker.sh
 
@@ -142,4 +143,3 @@ jobs:
          run: |
           docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
           docker run -d -p 3000:3000 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
-          
