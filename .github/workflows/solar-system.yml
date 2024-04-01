@@ -130,9 +130,10 @@ jobs:
             
        - name: Install Docker on EC2 instance
          run: |
-           sudo apt-get install -f
-           sudo apt-get install -y docker.io
-   
+           sudo apt-get install
+           chmod +x docker.sh
+           ./docker.sh
+           
        - name: Pull and Run Docker Image
          run: |
           docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
