@@ -150,6 +150,5 @@ jobs:
               echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
                
               # Pull and Run Docker Image
-              docker pull mohammedsuhail22/solar-system
-              sudo docker run -d -p 3000:3000 mohammedsuhail22/solar-system
-      
+              docker pull ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+              sudo docker run -d -p 3000:3000 ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
