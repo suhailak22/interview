@@ -127,7 +127,7 @@ jobs:
     deploy-to-ec2-instance:
        name: deployment
        needs: [unit-testing, code-coverage, Docker-login]
-       runs-on: self-hosted
+       runs-on: ubuntu-latest
 
        permissions:
         packages: write
