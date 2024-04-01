@@ -120,6 +120,9 @@ jobs:
        runs-on: ubuntu-latest
        steps:
 
+       - name: checkourt repsoitory
+         uses: actions/checkout@v4   
+
        - name: Deploy to EC2 instance
          uses: appleboy/ssh-action@master
          with:
@@ -133,7 +136,7 @@ jobs:
            sudo apt-get install
            chmod +x docker.sh
            ./docker.sh
-           
+
        - name: Pull and Run Docker Image
          run: |
           docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
