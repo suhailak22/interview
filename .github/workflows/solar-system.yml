@@ -156,5 +156,5 @@ jobs:
          
        - name: Pull and Run Docker Image
          run: |
-          docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
-          docker run -d -p 3000:3000 ghcr.ioghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
+          docker pull ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
+          docker run -d -p 3000:3000 ghcr.io/suhailak22/solar-system:be2b3b5ba75ad02623f801754013e76feb6fe915
