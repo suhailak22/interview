@@ -149,8 +149,11 @@ jobs:
          run: |
            chmod +x dockers.sh
            ./dockers.sh
+    
 
-
+       - name: Authenticate Docker with GHCR
+         run: echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+         
        - name: Pull and Run Docker Image
          run: |
           docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
