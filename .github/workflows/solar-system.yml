@@ -133,7 +133,7 @@ jobs:
             
        - name: Install Docker on EC2 instance
          run: |
-           sudo apt-get install
+           sudo apt-get update
            chmod +x docker.sh
            ./docker.sh
 
