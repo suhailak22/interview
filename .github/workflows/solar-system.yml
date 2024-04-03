@@ -121,22 +121,27 @@ jobs:
           tags: |
                  ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
                  ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
-    
-    connect:
-     runs-on: ubuntu-latest
-     steps:
-     - uses: actions/checkout@v3
-
-     - name: Use SSH key from secret
-       uses: google-github-actions/ssh-compute@v1
-       with:
-        project_id: able-river-419007
-        zone: us-central1-a	
-        instance_name: demo-instance-2
-        private_key: ${{ secrets.GCP_SSH_KEY }}
-        command: 'echo "Connected to GCP Compute Engine instance"'
-
-     - name: Run commands on VM (optional)
-       run: |   
-        sudo docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
-        sudo docker run -d -p 3000:3001 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
+      
+  deploy:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+              
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+         service_account_key: ${{ secrets.GCP_SA_KEY }}
+         project_id: ${{ secrets.GCP_PROJECT_ID }}
+      
+      - name: Authenticate to Google Cloud
+        run: |
+         gcloud auth activate-service-account --key-file ${{ secrets.GCP_SA_KEY }}
+         gcloud config set compute/zone ${{ secrets.GCP_ZONE }}
+         gcloud config set compute/region ${{ secrets.GCP_REGION }}
+              
+                  - name: Deploy to GCP VM
+                    run: |
+                      sudo echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+                      sudo gcloud compute ssh demo-instance-2 --command="sudo docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}"
+                      sudo gcloud compute ssh demo-instance-2 --command="sudo docker run -d -p 3000:3001 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}"
