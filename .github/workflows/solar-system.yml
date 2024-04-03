@@ -140,5 +140,5 @@ jobs:
          #password: suhail
          script: |
            sudo echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-           sudo docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
-           sudo docker run -d -p 3000:3000 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}}
+           sudo docker pull ghcr.io/suhailak22/solar-system:ea4a52a8e9da85ab921701f84ea921eb7a25f19a
+           sudo docker run -d -p 3000:3000  ghcr.io/suhailak22/solar-system:ea4a52a8e9da85ab921701f84ea921eb7a25f19a
