@@ -135,9 +135,9 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
          host: 35.232.84.47
-         username: username
+         username: suhailakofficial
          key: ${{ secrets.GCP_SSH_KEY }}
-         password: suhail
+         #password: suhail
          script: |
            # Commands to run on the VM after SSH connection
            chmod +x dockers.sh
