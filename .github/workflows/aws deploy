@@ -121,36 +121,39 @@ jobs:
           tags: |
                  ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
                  ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
+    
+    deploy:
+      needs: Docker-login
+      name: deploy-vm
+      runs-on: ubuntu-latest
+      steps:
      
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Deploy to EC2 instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+             # Commands to execute on the EC2 instance
+             cd /var/www/html
+             pwd  # Example command
+             # Authenticate Docker with GHCR
+             #echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+             sudo echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+             sudo docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
+             sudo docker run -d -p 3000:3001 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
 
-    deploy-to-ec2-instance:
-       name: deployment
-       needs: [unit-testing, code-coverage, Docker-login]
-
-       permissions:
-        packages: write
-
-       runs-on: ubuntu-latest
-       steps: 
-
-        - name: checkourt repsoitory
-          uses: actions/checkout@v4
-
-        - name: Deploy to EC2 instance
-          uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.EC2_HOST }}
-            username: ${{ secrets.EC2_USERNAME }}
-            key: ${{ secrets.EC2_PRIVATE_KEY }}
-            script: |
-              # Commands to execute on the EC2 instance
-              cd /var/www/html
-              pwd  # Example command
-              # Authenticate Docker with GHCR
-              #echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-              sudo echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-              sudo docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
-              sudo docker run -d -p 3000:3001 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
-              # Pull and Run Docker Image
-              docker pull ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
-              $sudo docker run -d -p 3001:3001 ${{ vars.DOCKERHUB_USERNAME }}/solar-system:${{ github.sha }}
+        
+      - name: SSH into GCP VM
+        uses: appleboy/ssh-action@master
+        with:
+        host: 35.232.84.47
+        username: suhailakofficial
+        key: ${{ secrets.GCP_SSH_KEY }}
+        script: |
+         sudo echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+         sudo docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
+        sudo docker run -d -p 3000:3000 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
