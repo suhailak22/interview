@@ -136,13 +136,14 @@ jobs:
         - name: checkourt repsoitory
           uses: actions/checkout@v4
 
-        - name: Deploy to EC2 instance
+        - name: SSH into GCP VM
           uses: appleboy/ssh-action@master
           with:
-            host: ${{ secrets.EC2_HOST }}
-            username: ${{ secrets.EC2_USERNAME }}
-            key: ${{ secrets.EC2_PRIVATE_KEY }}
-            script: |
+           host: 35.232.84.47
+           username: suhailakofficial
+           key: ${{ secrets.GCP_SSH_KEY }}
+           password: suhail
+           script: |
               # Commands to execute on the EC2 instance
               cd /var/www/html
               pwd  # Example command
