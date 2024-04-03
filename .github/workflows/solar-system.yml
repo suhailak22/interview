@@ -140,4 +140,6 @@ jobs:
          password: suhail
          script: |
            # Commands to run on the VM after SSH connection
-           echo "Hello, GCP VM!"  
+           sudo echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+           sudo docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
+           sudo docker run -d -p 3000:3001 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
