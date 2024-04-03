@@ -136,7 +136,7 @@ jobs:
         with:
          host: 35.232.84.47
          username: username
-         #key: ${{ secrets.GCP_SSH_KEY }}
+         key: ${{ secrets.GCP_SSH_KEY }}
          password: suhail
          script: |
            # Commands to run on the VM after SSH connection
