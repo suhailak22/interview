@@ -136,21 +136,20 @@ jobs:
         - name: checkourt repsoitory
           uses: actions/checkout@v4
 
-        connect:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+     connect:
+     runs-on: ubuntu-latest
+     steps:
+     - uses: actions/checkout@v3
 
-      - name: Use SSH key from secret
-        uses: google-github-actions/ssh-compute@v1
-        with:
-          project_id: your-project-id
-          zone: your-zone
-          instance_name: your-vm-name
-          private_key: ${{ secrets.GCP_SSH_KEY }}
+     - name: Use SSH key from secret
+       uses: google-github-actions/ssh-compute@v1
+       with:
+         project_id: able-river-419007
+         zone: us-central1-a	
+         instance_name: demo-instance-2
+         private_key: ${{ secrets.GCP_SSH_KEY }}
 
-      - name: Run commands on VM (optional)
-        run: |
-          # You can run commands on the VM here
-          # This step requires additional configuration for SSH access to the VM itself
-          echo "Connected to GCP VM!"
+     - name: Run commands on VM (optional)
+       run: |   
+        sudo docker pull ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
+        sudo docker run -d -p 3000:3001 ghcr.io/${{ github.repository_owner }}/solar-system:${{ github.sha }}
