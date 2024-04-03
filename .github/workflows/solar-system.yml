@@ -135,7 +135,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
          host: 35.232.84.47
-         username: suhailakofficial@demo-instance-2
+         username: suhailakofficial
          key: ${{ secrets.GCP_SSH_KEY }}
          script: |
            # Commands to run on the VM after SSH connection
