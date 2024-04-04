@@ -25,8 +25,8 @@ phases:
       - echo "Installing AWS CLI"
       - pip3 install awscli --upgrade --user
       - echo "Configuring AWS CLI"
-      - aws configure set aws_access_key_id AKIA3VY6ZO6YTAOMYO44
-      - aws configure set aws_secret_access_key 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
+      - aws configure set aws_access_key_id AKIAQOO7UJJSNSDZZ7FM
+      - aws configure set aws_secret_access_key 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
       - aws configure set default.region ap-south-1
       - echo "AWS CLI version:"
       - aws --version
