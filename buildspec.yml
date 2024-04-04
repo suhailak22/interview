@@ -42,7 +42,7 @@ phases:
       - zip -r application.zip .
 
       # Generate a unique S3 path based on date and time for the latest artifact
-      - ARTIFACT_PATH="s3://albion-artifact/Admin-panel/$(date +'%Y-%m-%d-%H:%M:%S')/"
+      - ARTIFACT_PATH="s3://interview-123/artifacts/$(date +'%Y-%m-%d-%H:%M:%S')/"
       - echo "Copying application.zip to S3"
       - aws s3 cp application.zip $ARTIFACT_PATH
 
