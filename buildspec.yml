@@ -55,7 +55,6 @@ phases:
       - ssh -o StrictHostKeyChecking=no -i "trail-1" ubuntu@ec2-13-127-176-89.ap-south-1.compute.amazonaws.com "cd /var/www/html && sudo unzip -o application.zip"
       # SSH into the EC2 instance
       - ssh -o StrictHostKeyChecking=no -i "trail-1"  ubuntu@ec2-13-127-176-89.ap-south-1.compute.amazonaws.com "cd /var/www/html && sudo npm install"
-      - ssh -o StrictHostKeyChecking=no -i "trail-1"  ubuntu@ec2-13-127-176-89.ap-south-1.compute.amazonaws.com "cd /var/www/html && sudo npm run build"
-      - ssh -o StrictHostKeyChecking=no -i "trail-1"  ubuntu@ec2-13-127-176-89.ap-south-1.compute.amazonaws.com "cd /var/www/html/build && sudo pm2 start npm --name 'admin-panel' -- start"
+      - ssh -o StrictHostKeyChecking=no -i "trail-1"  ubuntu@ec2-13-127-176-89.ap-south-1.compute.amazonaws.com "cd /var/www/html && sudo npm start"
 artifacts:
   files: '**/*'
