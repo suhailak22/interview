@@ -33,7 +33,7 @@ phases:
 
       # Fetch the PEM key from AWS SSM Parameter Store
       - echo "Fetching PEM key from AWS SSM Parameter Store"
-      - PEM_KEY_CONTENT=$(aws ssm get-parameter --name "/trail-1-1" --with-decryption --query "Parameter.Value" --output text)
+      - PEM_KEY_CONTENT=$(aws ssm get-parameter --name "/trail-1" --with-decryption --query "Parameter.Value" --output text)
       - echo "$PEM_KEY_CONTENT" > trail-1
       - chmod 400 trail-1
 
