@@ -27,7 +27,7 @@ phases:
       - echo "Configuring AWS CLI"
       - aws configure set aws_access_key_id AKIAQOO7UJJSNSDZZ7FM
       - aws configure set aws_secret_access_key 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
-      - aws configure set default.region ap-south-1
+      - aws configure set default.region ap-south-2
       - echo "AWS CLI version:"
       - aws --version
 
