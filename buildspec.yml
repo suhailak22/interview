@@ -1,0 +1,61 @@
+version: 0.2
+
+env:
+  parameter-store:
+    PEM_KEY: "/trail"
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+
+  pre_build:
+    commands:
+      - echo "Running Pre-build Commands"
+
+  build:
+    commands:
+      - echo "building the build"
+      - echo "Installing project dependencies"
+      #- npm install  # Install project dependencies
+      #- npm run build  # Run the build script defined in package.json
+
+  post_build:
+    commands:
+      - echo "Installing AWS CLI"
+      - pip3 install awscli --upgrade --user
+      - echo "Configuring AWS CLI"
+      - aws configure set aws_access_key_id AKIA3VY6ZO6YTAOMYO44
+      - aws configure set aws_secret_access_key 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
+      - aws configure set default.region ap-south-1
+      - echo "AWS CLI version:"
+      - aws --version
+
+      # Fetch the PEM key from AWS SSM Parameter Store
+      - echo "Fetching PEM key from AWS SSM Parameter Store"
+      - PEM_KEY_CONTENT=$(aws ssm get-parameter --name "/trail" --with-decryption --query "Parameter.Value" --output text)
+      - echo "$PEM_KEY_CONTENT" > trail
+      - chmod 400 trail
+
+      # Create a zip archive of your application files
+      - echo "Creating a zip archive of your application files"
+      - zip -r application.zip .
+
+      # Generate a unique S3 path based on date and time for the latest artifact
+      - ARTIFACT_PATH="s3://albion-artifact/Admin-panel/$(date +'%Y-%m-%d-%H:%M:%S')/"
+      - echo "Copying application.zip to S3"
+      - aws s3 cp application.zip $ARTIFACT_PATH
+
+      # Copying application.zip to the EC2 instance
+      - echo "Copying application.zip to EC2 instance"
+      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-101-180.ap-south-2.compute.amazonaws.com "sudo aws s3 cp $ARTIFACT_PATH /var/www/html --recursive"
+      # SSH into the EC2 instance
+      - echo "SSH into the EC2 instance and performing cleanup"
+      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-101-180.ap-south-2.compute.amazonaws.com "cd /var/www/html && sudo rm -rf node_modules/*"
+      - ssh -o StrictHostKeyChecking=no -i "trail" ubuntu@ec2-18-60-101-180.ap-south-2.compute.amazonaws.com "cd /var/www/html && sudo unzip -o application.zip"
+      # SSH into the EC2 instance
+      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-101-180.ap-south-2.compute.amazonaws.com "cd /var/www/html && sudo npm install"
+      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-101-180.ap-south-2.compute.amazonaws.com "cd /var/www/html && sudo npm run build"
+      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-101-180.ap-south-2.compute.amazonaws.com "cd /var/www/html/build && sudo pm2 start npm --name 'admin-panel' -- start"
+artifacts:
+  files: '**/*'
