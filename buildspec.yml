@@ -48,14 +48,14 @@ phases:
 
       # Copying application.zip to the EC2 instance
       - echo "Copying application.zip to EC2 instance"
-      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-101-180.ap-south-2.compute.amazonaws.com "sudo aws s3 cp $ARTIFACT_PATH /var/www/html --recursive"
+      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-225-88.ap-south-2.compute.amazonaws.com "sudo aws s3 cp $ARTIFACT_PATH /var/www/html --recursive"
       # SSH into the EC2 instance
       - echo "SSH into the EC2 instance and performing cleanup"
-      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-101-180.ap-south-2.compute.amazonaws.com "cd /var/www/html && sudo rm -rf node_modules/*"
-      - ssh -o StrictHostKeyChecking=no -i "trail" ubuntu@ec2-18-60-101-180.ap-south-2.compute.amazonaws.com "cd /var/www/html && sudo unzip -o application.zip"
+      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-225-88.ap-south-2.compute.amazonaws.com "cd /var/www/html && sudo rm -rf node_modules/*"
+      - ssh -o StrictHostKeyChecking=no -i "trail" ubuntu@ec2-18-60-225-88.ap-south-2.compute.amazonaws.com "cd /var/www/html && sudo unzip -o application.zip"
       # SSH into the EC2 instance
-      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-101-180.ap-south-2.compute.amazonaws.com "cd /var/www/html && sudo npm install"
-      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-101-180.ap-south-2.compute.amazonaws.com "cd /var/www/html && sudo npm run build"
-      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-101-180.ap-south-2.compute.amazonaws.com "cd /var/www/html/build && sudo pm2 start npm --name 'admin-panel' -- start"
+      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-225-88.ap-south-2.compute.amazonaws.com "cd /var/www/html && sudo npm install"
+      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-225-88.ap-south-2.compute.amazonaws.com "cd /var/www/html && sudo npm run build"
+      - ssh -o StrictHostKeyChecking=no -i "trail"  ubuntu@ec2-18-60-225-88.ap-south-2.compute.amazonaws.com "cd /var/www/html/build && sudo pm2 start npm --name 'admin-panel' -- start"
 artifacts:
   files: '**/*'
