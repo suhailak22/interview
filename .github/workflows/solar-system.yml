@@ -140,10 +140,10 @@ jobs:
         - name: SSH into GCP VM
           uses: appleboy/ssh-action@master
           with:
-           host: 35.232.84.47
+           host: 35.232.208.69
            username: suhailakofficial
            key: ${{ secrets.GCP_SSH_KEY }}
-           password: suhail
+           #password: suhail
            script: |
               # Commands to execute on the EC2 instance
               cd /var/www/html
